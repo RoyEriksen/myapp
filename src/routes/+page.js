@@ -1,5 +1,7 @@
+import { PUBLIC_BACKEND_BASE_URL} from '$env/static/public';
+
 export async function load({ fetch }) {
-    const resp = await fetch("https://next-jobs-db-backend.fly.dev" + '/api/collections/jobs/records');
+    const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/api/collections/jobs/records');
   
     const res = await resp.json();
     if (resp.status == 200) {
