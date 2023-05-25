@@ -1,5 +1,6 @@
 
 <script>
+    import humanize from 'humanize-plus';
     export let data;
 </script>
 
@@ -13,7 +14,7 @@
                 <div class="text-sm mt-1">
                     {job.employer} . {job.location} .
                     <span class="text-sm"
-                        >USD {job.minAnnualCompensation} - USD {job.maxAnnualCompensation}</span
+                        >USD {humanize.formatNumber(job.minAnnualCompensation)} - USD {humanize.formatNumber(job.maxAnnualCompensation)}</span
                     >
                 </div>
                 <div class="italic text-xs opacity-50 mt-2"
