@@ -1,12 +1,18 @@
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 
+import { writable } from 'svelte/store';
+
 const emptyAuth = {
   "token": "",
-  "userId": ""
+  "userId": "",
+  "username": ""
 }
+
+export const isLoggedInStore = writable(!!getTokenFromLocalStorage());
 
 export function logOut() {
   localStorage.setItem("auth", JSON.stringify(emptyAuth));
+  isLoggedInStore.set(false);
   return true
 }
 
@@ -18,6 +24,15 @@ export function getUserId() {
   return null
 }
 
+// Added getUsername function to retrieve the username
+export function getUsername() {
+  const auth = localStorage.getItem("auth");
+  if (auth) {
+    return JSON.parse(auth)["username"];
+  }
+  return null;
+}
+
 export function getTokenFromLocalStorage() {
   const auth = localStorage.getItem("auth")
   if (auth) {
@@ -26,7 +41,7 @@ export function getTokenFromLocalStorage() {
   return null
 }
 
-export async function isLoggedIn() {
+export async function checkIsLoggedIn() {
   if (!getTokenFromLocalStorage()) {
     return false
   }
@@ -49,15 +64,16 @@ export async function isLoggedIn() {
 
       localStorage.setItem("auth", JSON.stringify({
         "token": res.token,
-        "userId": res.record.id
+        "userId": res.record.id,
+        "username": res.record.username
       }));
-
-      return true
+      isLoggedInStore.set(true);
+      return true;
     }
 
-    return false
+    return false;
   } catch {
-    return false
+    return false;
   }
 }
 

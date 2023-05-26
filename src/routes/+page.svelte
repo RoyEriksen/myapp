@@ -1,7 +1,21 @@
-
 <script>
+    import { isLoggedInStore, getUserId } from '../utils/auth.js';
     import humanize from 'humanize-plus';
+
+    let isLoggedIn = false;
+    let username = '';
+
+    isLoggedInStore.subscribe(value => {
+        isLoggedIn = value;
+        if (isLoggedIn) {
+            username = getUserId(); 
+        } else {
+            username = '';
+        }
+    });
+
     export let data;
+
 </script>
 
 <h1 class="text-center text-xl font-bold">Find Your Next Job</h1>
@@ -32,4 +46,16 @@
             </div>
         </div>
     {/each}
+
+    {#if isLoggedIn}
+    <div class="text-center mt-10">
+      <!-- Show content for logged-in users -->
+      <p>Welcome, {username}!</p>
+    </div>
+  {:else}   
+    <div class="text-center mt-10">
+      <!-- Show content for non-logged-in users -->
+      <p>Please log in to see additional content.</p>
+    </div>
+  {/if}
 </div>
