@@ -8,7 +8,7 @@ const emptyAuth = {
   "username": ""
 }
 
-export const isLoggedInStore = writable(!!getTokenFromLocalStorage());
+export const isLoggedInStore = writable(false);
 
 export function logOut() {
   localStorage.setItem("auth", JSON.stringify(emptyAuth));
@@ -101,6 +101,7 @@ export async function authenticateUser(username, password) {
       "userId": res.record.id
     }));
 
+    isLoggedInStore.set(true);
     return {
       success: true,
       res: res

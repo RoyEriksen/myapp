@@ -1,6 +1,8 @@
 <script>
-    import { isLoggedInStore, getUserId } from '../utils/auth.js';
+    import { isLoggedInStore, authenticateUser, getUserId, logOut } from '../utils/auth.js';
     import humanize from 'humanize-plus';
+    import { goto } from '$app/navigation';
+
 
     let isLoggedIn = false;
     let username = '';
@@ -16,9 +18,23 @@
 
     export let data;
 
+    function handleLogOut() {
+        logOut();
+    }
+
+    async function handleLogIn() {
+        goto('../login')
+    }
+
 </script>
 
 <h1 class="text-center text-xl font-bold">Find Your Next Job</h1>
+
+{#if isLoggedIn}
+    <div class="logout-button" on:click={handleLogOut}>Log Out</div>
+{:else} 
+    <div class="logout-button" on:click={handleLogIn}>Log In</div>
+{/if}
 
 <div class="overflow-x-auto w-full">
     {#each data.jobs as job}
