@@ -1,10 +1,11 @@
 <script>
+    import Layout from '../../Layout.svelte'
     import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
     import { goto } from '$app/navigation';
     import { authenticateUser } from '../../../utils/auth.js';
     let formErrors = {};
   
-    function postSignUp() {
+    function postSignUp() {x``
       goto('/jobs/new');
     }
   
@@ -46,7 +47,7 @@
       }
     }
   </script>
-  
+  <Layout showButtons={false}>
   <h1 class="text-center text-xl">Create an Account to Post a Job</h1>
   <div class="text-center">
       <a class="link-hover italic text-xs" href="/login">Already have an account? Click here to login instead.</a>
@@ -106,3 +107,4 @@
           </div>
       </form>
   </div>
+</Layout>

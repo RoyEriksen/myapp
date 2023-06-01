@@ -1,23 +1,51 @@
 <script>
-    import { authenticateUser } from "../../utils/auth";
+    import { onMount } from 'svelte';
+    import { authenticateUser, isLoggedInStore, getUsername, logOut, checkIsLoggedIn } from "../../utils/auth";
     import { goto } from '$app/navigation';
+    import Layout from '../Layout.svelte';
     
+    let isLoggedIn = false;
     let username = '';
     let password = '';
-  
-    async function handleLogin() {
-      const loginResult = await performLogin();
 
-      if (loginResult.success) {
-        goto('/')
-      }
+
+    isLoggedInStore.subscribe(value => {
+    isLoggedIn = value;
+    if (isLoggedIn) {
+      username = getUsername();
+    } else {
+      username = '';
     }
+  });
 
-    async function performLogin() {
-    return await authenticateUser(username, password);
+  export let data;
+
+  // function handleRegister() {
+  //   goto('../users/new');
+  // }
+
+  // function handleLogOut() {
+  //   logOut();
+  // }
+
+  async function handleLogin() {
+    const loginResult = await performLogin();
+
+    if (loginResult.success) {
+      goto('/')
+    }
   }
+  
+  async function performLogin() {
+  return await authenticateUser(username, password);
+}
+  
+  onMount(async () => {
+    await checkIsLoggedIn();
+  });
   </script>
   
+  <Layout showButtons={false}>
   <main>
     <h1>Login</h1>
     <form on:submit|preventDefault={handleLogin}>
@@ -32,6 +60,7 @@
       <button type="submit">Log In</button>
     </form>
   </main>
+</Layout>
   
   <style>
     main {
