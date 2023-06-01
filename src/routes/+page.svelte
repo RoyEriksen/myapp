@@ -20,6 +20,10 @@
 
     export let data;
 
+    function handleRegister() {
+        goto('../users/new')
+    }
+
     function handleLogOut() {
         logOut();
     }
@@ -33,14 +37,21 @@
     });
 </script>
 
-<h1 class="text-center text-xl font-bold">Find Your Next Job</h1>
+<header>
+    <div class="header-container">
+        <div class="header-buttons">
+            {#if isLoggedIn}
+                <button on:click="{() => goto('./jobs')}">Create New Job</button>
+                <button on:click={handleLogOut}>Log Out</button>
+            {:else}
+                <button on:click={handleRegister}>Register</button>
+                <button on:click={handleLogIn}>Log In</button>
+            {/if}
+        </div>
+    </div>
+</header>
 
-{#if isLoggedIn}
-    <div class="logout-button" on:click={handleLogOut}>Log Out</div>
-    <div class="create-new-job-button" on:click="{() => goto('./jobs')}">Create New Job</div>
-{:else} 
-    <div class="login-button" on:click={handleLogIn}>Log In</div>
-{/if}
+<h1 class="text-center text-xl font-bold">Find Your Next Job</h1>
 
 
 <div class="overflow-x-auto w-full">
@@ -82,3 +93,27 @@
     </div>
   {/if}
 </div>
+
+<style>
+    .header-buttons {
+    display: flex;
+    justify-content: flex-end;
+    }
+    
+    .header-buttons button {
+    background-color: #4caf50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 15px;
+    font-size: 12px;
+    }
+
+    .header-container {
+        height: 50px;
+        padding: 10px;
+        background-color: rgba(232, 229, 229, 0.5);
+    }
+</style>
