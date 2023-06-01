@@ -11,9 +11,10 @@ const emptyAuth = {
 export const isLoggedInStore = writable(false);
 
 export function logOut() {
+  localStorage.removeItem("isLoggedIn");
   localStorage.setItem("auth", JSON.stringify(emptyAuth));
   isLoggedInStore.set(false);
-  return true
+  return true;
 }
 
 export function getUserId() {
@@ -98,9 +99,11 @@ export async function authenticateUser(username, password) {
   if (resp.status == 200) {
     localStorage.setItem("auth", JSON.stringify({
       "token": res.token,
-      "userId": res.record.id
+      "userId": res.record.id,
+      "username": res.record.username
     }));
 
+    localStorage.setItem("isLoggedIn", "true");
     isLoggedInStore.set(true);
     return {
       success: true,
@@ -112,4 +115,8 @@ export async function authenticateUser(username, password) {
     success: false,
     res: res
   }
+}
+
+export function getIsLoggedIn() {
+  return !!localStorage.getItem("isLoggedIn");
 }

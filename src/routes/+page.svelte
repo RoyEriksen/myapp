@@ -1,16 +1,18 @@
 <script>
-    import { isLoggedInStore, authenticateUser, getUserId, logOut } from '../utils/auth.js';
+    import { onMount } from 'svelte';
+    import { isLoggedInStore, authenticateUser, getUserId, logOut, getUsername, checkIsLoggedIn } from '../utils/auth.js';
     import humanize from 'humanize-plus';
     import { goto } from '$app/navigation';
 
 
+    // let isLoggedIn = !!localStorage.getItem("isLoggedIn");
     let isLoggedIn = false;
     let username = '';
 
     isLoggedInStore.subscribe(value => {
         isLoggedIn = value;
         if (isLoggedIn) {
-            username = getUserId(); 
+            username = getUsername(); 
         } else {
             username = '';
         }
@@ -26,15 +28,20 @@
         goto('../login')
     }
 
+    onMount(async () => {
+        await checkIsLoggedIn();
+    });
 </script>
 
 <h1 class="text-center text-xl font-bold">Find Your Next Job</h1>
 
 {#if isLoggedIn}
     <div class="logout-button" on:click={handleLogOut}>Log Out</div>
+    <div class="create-new-job-button" on:click="{() => goto('./jobs')}">Create New Job</div>
 {:else} 
-    <div class="logout-button" on:click={handleLogIn}>Log In</div>
+    <div class="login-button" on:click={handleLogIn}>Log In</div>
 {/if}
+
 
 <div class="overflow-x-auto w-full">
     {#each data.jobs as job}
