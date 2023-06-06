@@ -48,8 +48,8 @@
       <div class="header-buttons">
         {#if showButtons && isLoggedIn}
           <!-- {#if isLoggedIn} -->
-              <button on:click="{() => goto('./jobs')}">Create New Job</button>
-              <button on:click={handleLogOut}>Log Out</button>
+            <button on:click={() => window.location.href = '/jobs'}>Create New Job</button>
+            <button on:click={handleLogOut}>Log Out</button>
               
           {:else if showButtons && !isLoggedIn}
               <button on:click={handleRegister}>Register</button>

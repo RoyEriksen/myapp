@@ -6,6 +6,7 @@
   import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
   import { getTokenFromLocalStorage } from '../../../utils/auth.js';
   import Layout from '../../Layout.svelte';
+  import { alerts, addAlert, removeAlert } from '../../alerts.js';
 	// import { contenteditable_truthy_values } from 'svelte/internal';
   
   export let data;
@@ -36,6 +37,7 @@
       if (response.ok) {
         console.log('Job successfully updated.');
         toggleEditMode();
+        addAlert('Job successfully updated.', 'success');
       } else {
         // Handle error if the update request fails
         console.error('Failed to update job data.');
@@ -45,159 +47,172 @@
       console.error('Error occurred while updating job data:', error);
     }
   }
-
+  
 </script>
 
 <Layout>
-<style>
-  .container {
-    margin-top: 10px;
-  }
-
-  .flex-container {
-    display: flex;
-  }
-
-  .flex-1 {
-    flex: 1;
-  }
-
-  .job-title {
-    font-size: 3xl;
-    font-weight: bold;
-  }
-
-  .employer {
-    font-size: xl;
-  }
-
-  .heading {
-    font-size: xl;
-    font-weight: thin;
-  }
-
-  .content {
-    margin-top: 6px;
-  }
-
-  .salary-content {
-    margin-left: 4px;
-  }
-
-  .overlay {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
-   }
-
-  .overlay-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 1200px;
-    width: 100%;
-    max-height: 90%;
-    overflow-y: auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    justify-content: center;
-  }
-
+  <style>
+    .container {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    
+    .flex-container {
+      display: flex;
+    }
+    
+    .flex-1 {
+      flex: 1;
+    }
+    
+    .job-title {
+      font-size: 3xl;
+      font-weight: bold;
+    }
+    
+    .employer {
+      font-size: xl;
+    }
+    
+    .heading {
+      font-size: xl;
+      font-weight: thin;
+    }
+    
+    .content {
+      margin-top: 6px;
+    }
+    
+    .salary-content {
+      margin-left: 4px;
+    }
+    
+    .overlay {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .overlay-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 1200px;
+      width: 100%;
+      max-height: 90%;
+      overflow-y: auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      justify-content: center;
+    }
+    
     /* Hide the scrollbar */
     .overlay-content::-webkit-scrollbar {
-    display: none;
-  }
-
+      display: none;
+    }
+    
     /* Optional: Add a custom scrollbar style */
     .overlay-content {
-    scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
-  }
-
-  .form-container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 4px;
-    width: 100%;
-    /* max-width: 1000px; */
-  }
-
-  .form-field {
-    margin-bottom: 10px;
-  }
-
-  .form-field label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-
-  .form-field input,
-  .form-field textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  .form-field textarea {
-    resize: none;
-    height: auto;
-    min-height: 250px;
-  }
-
-  .button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-
-  .button-container button {
-    padding: 8px 16px;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .button-container button + button {
-    margin-left: 10px;
-  }
-
-  .edit-button {
-    background-color: #007bff;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    position: fixed;
-    top: 60px; /* Adjust this value as needed to align the button */
-    right: 25px; /* Adjust this value as needed to align the button */
-    z-index: 999; /* Ensure the button appears above other elements */
-    height: 30px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-</style>
+      scrollbar-width: thin;
+      scrollbar-color: #ccc transparent;
+    }
+    
+    .form-container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 4px;
+      width: 100%;
+      /* max-width: 1000px; */
+    }
+    
+    .form-field {
+      margin-bottom: 10px;
+    }
+    
+    .form-field label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    .form-field textarea {
+      resize: none;
+      height: auto;
+      min-height: 250px;
+      font-size: 16px;
+    }
+    
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    
+    .button-container button {
+      padding: 8px 16px;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .button-container button + button {
+      margin-left: 10px;
+    }
+    
+    .edit-button {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      position: fixed;
+      top: 60px; /* Adjust this value as needed to align the button */
+      right: 25px; /* Adjust this value as needed to align the button */
+      z-index: 999; /* Ensure the button appears above other elements */
+      height: 30px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .success {
+      background-color: #a3e6be;
+    }
+    
+  </style>
 </Layout>
+
+{#each $alerts as alert}
+  <div class={alert.type}>
+    <p>{alert.message}</p>
+    <!-- <button on:click={() => removeAlert(alert)}>Dismiss</button> -->
+  </div>
+{/each}
 
 <div>
   {#if data.job.user === user}
-    <button class="edit-button" on:click={toggleEditMode}>
-      {#if editMode}
+  <button class="edit-button" on:click={toggleEditMode}>
+    {#if editMode}
         Save
       {:else}
         Edit
@@ -292,3 +307,4 @@
     </div>
   </div>
 </div>
+

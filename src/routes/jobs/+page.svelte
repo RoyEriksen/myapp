@@ -3,6 +3,7 @@
   import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
   import { onMount } from 'svelte';
   import Layout from '../Layout.svelte';
+  import { alerts, addAlert, removeAlert } from '../alerts.js';
 
   
   let job = {
@@ -17,7 +18,7 @@
     employer: ''
   };
   
-  let showSuccessMessage = false;
+  // let showSuccessMessage = false;
   // let isEditing = false;
 
   export async function createJobOnBackend(job) {
@@ -38,7 +39,7 @@
       job.id = createdJob.id;
       console.log('Job created successfully');
       resetFormFields();
-      showSuccessMessage = true;
+      addAlert('Job created successfully', 'success');
     } else {
       console.error('Job creation failed');
     }
@@ -69,17 +70,22 @@
   // isEditing = userId === job.user;
 </script>
 
-{#if showSuccessMessage}
-<div class="success-overlay">
-    <div class="success-message">
-        <p>Job created successfully</p>
-        <div class="success-message-buttons">
-          <button on:click={() => showSuccessMessage = false}>Add Another Job</button>
-          <button on:click={() => window.location.href = '/'}>Return Home</button>
+{#if $alerts.length > 0}
+  {#each $alerts as alert (alert.message)}
+    {#if alert.type === 'success'}
+      <div class="success-overlay">
+        <div class="success-message">
+          <p>{alert.message}</p>
+          <div class="success-message-buttons">
+            <button on:click={() => removeAlert(alert)}>Add Another Job</button>
+            <button on:click={() => window.location.href = '/'}>Return Home</button>
+          </div>
         </div>
       </div>
-</div>
+    {/if}
+  {/each}
 {/if}
+
 
 <Layout showButtons={false}>
 <form on:submit={handleSubmit}>
