@@ -5,8 +5,8 @@
     import { authenticateUser } from '../../../utils/auth.js';
     let formErrors = {};
   
-    function postSignUp() {x``
-      goto('/jobs/new');
+    function postSignUp() {
+      goto('/');
     }
   
     async function createUser(evt) {

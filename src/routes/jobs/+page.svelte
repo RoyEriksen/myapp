@@ -2,6 +2,8 @@
   import { getUserId } from '../../utils/auth.js';
   import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
   import { onMount } from 'svelte';
+  import Layout from '../Layout.svelte';
+
   
   let job = {
     user: getUserId(),
@@ -15,9 +17,10 @@
     employer: ''
   };
   
-let showSuccessMessage = true;
+  let showSuccessMessage = false;
+  // let isEditing = false;
 
-export async function createJobOnBackend(job) {
+  export async function createJobOnBackend(job) {
     const resp = await fetch(
       PUBLIC_BACKEND_BASE_URL + '/api/collections/jobs/records',
       {
@@ -31,21 +34,27 @@ export async function createJobOnBackend(job) {
     );
   
     if (resp.ok) {
+      const createdJob = await resp.json();
+      job.id = createdJob.id;
       console.log('Job created successfully');
       resetFormFields();
       showSuccessMessage = true;
     } else {
       console.error('Job creation failed');
     }
-  }
+    }
+
     function handleSubmit(event) {
       event.preventDefault();
-      createJobOnBackend(job);
-    }
+        createJobOnBackend(job);
+      }
+
+
 
     function resetFormFields() {
         job = {
         user: getUserId(),
+        id: '',
         title: '',
         minAnnualCompensation: '',
         maxAnnualCompensation: '',
@@ -56,7 +65,9 @@ export async function createJobOnBackend(job) {
         employer: ''
     };
   }
-  </script>
+
+  // isEditing = userId === job.user;
+</script>
 
 {#if showSuccessMessage}
 <div class="success-overlay">
@@ -69,7 +80,8 @@ export async function createJobOnBackend(job) {
       </div>
 </div>
 {/if}
-  
+
+<Layout showButtons={false}>
 <form on:submit={handleSubmit}>
     <div>
         <label for="title">Job Title:</label>
@@ -104,7 +116,9 @@ export async function createJobOnBackend(job) {
         <textarea bind:value={job.applicationInstructions} placeholder="Application Instructions"></textarea>
     </div>
 
-    <button type="submit">Add Job</button>
+    <button type="submit">
+      Add Job
+    </button>
   </form>
   
   <style>
@@ -184,6 +198,5 @@ export async function createJobOnBackend(job) {
   .success-message button:hover {
     background-color: #45a049;
   }
-
   </style>
-  
+  </Layout>

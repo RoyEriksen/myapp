@@ -3,11 +3,13 @@
     import { authenticateUser, isLoggedInStore, getUsername, logOut, checkIsLoggedIn } from "../../utils/auth";
     import { goto } from '$app/navigation';
     import Layout from '../Layout.svelte';
+    import { writable } from 'svelte/store';
     
     let isLoggedIn = false;
     let username = '';
     let password = '';
 
+    const errorMessage = writable('');
 
     isLoggedInStore.subscribe(value => {
     isLoggedIn = value;
@@ -20,19 +22,13 @@
 
   export let data;
 
-  // function handleRegister() {
-  //   goto('../users/new');
-  // }
-
-  // function handleLogOut() {
-  //   logOut();
-  // }
-
   async function handleLogin() {
     const loginResult = await performLogin();
 
     if (loginResult.success) {
       goto('/')
+    } else {
+      errorMessage.set('Incorrect username or password.')
     }
   }
   
@@ -46,7 +42,12 @@
   </script>
   
   <Layout showButtons={false}>
-  <main>
+    <div class="alert-container">
+      {#if $errorMessage}
+        <div class="alert">{ $errorMessage }</div>
+      {/if}
+    </div>
+    <main>
     <h1>Login</h1>
     <form on:submit|preventDefault={handleLogin}>
       <label>
@@ -84,5 +85,17 @@
       padding: 10px 20px;
       margin-top: 20px;
     }
+    .alert-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
   </style>
   

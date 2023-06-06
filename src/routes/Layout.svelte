@@ -23,15 +23,16 @@
   export let data;
 
   function handleRegister() {
-      goto('../users/new')
+      goto('/users/new') 
   }
 
   function handleLogOut() {
       logOut();
+      goto('/');
   }
 
   async function handleLogIn() {
-      goto('../login')
+      goto('/../login')
   }
 
   onMount(async () => {
@@ -41,15 +42,19 @@
 
 <header>
   <div class="header-container">
+    <div class="header-left">
+        <a on:click={() => goto('/')} class='header-link'>NextJobs</a>
+    </div>
       <div class="header-buttons">
-        {#if showButtons}
-          {#if isLoggedIn}
+        {#if showButtons && isLoggedIn}
+          <!-- {#if isLoggedIn} -->
               <button on:click="{() => goto('./jobs')}">Create New Job</button>
               <button on:click={handleLogOut}>Log Out</button>
-          {:else}
+              
+          {:else if showButtons && !isLoggedIn}
               <button on:click={handleRegister}>Register</button>
               <button on:click={handleLogIn}>Log In</button>
-          {/if}
+          <!-- {/if} -->
         {:else}
         <button on:click={() => window.location.href = '/'}>Return Home</button>
         {/if}  
@@ -74,11 +79,26 @@
   font-size: 12px;
   }
 
-  .header-container {
-      height: 50px;
-      padding: 10px;
-      background-color: rgba(232, 229, 229, 0.5);
+  .header-left {
+    margin-right: auto;
   }
+
+  .header-link {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 10px;
+    background-color: rgba(232, 229, 229, 0.5);
+  }
+  
 </style>
 
 <slot></slot>
